@@ -1,11 +1,70 @@
 import streamlit as st
 import os
-from audio_capture import AudioRecorder
 from transcription import Transcriber
 from analysis import ConversationAnalyzer
-import tempfile
-import time
-from datetime import datetime
+
+# Försök importera AudioRecorder, annars mock
+try:
+    from audio_capture import AudioRecorder
+    LOCAL_RECORDING = True
+except ImportError:
+    LOCAL_RECORDING = False
+    class AudioRecorder:
+        def __init__(self, *args, **kwargs):
+            raise RuntimeError("Local recording inte tillgängligt i molnet. Välj \"Upload audio file\" istället.")
+
+st.set_page_config(page_title="SamtalsBot", layout="wide")
+st.title("🎤 SamtalsBot för skolledare")
+
+# Sidopanel: Input-metod
+input_method = st.sidebar.selectbox(
+    "Välj inmatningsmetod:",
+    options=[
+        "Upload audio file",
+        "Local recording (endast lokalt)" if LOCAL_RECORDING else "Local recording (ej tillgängligt)"
+    ]
+)
+
+audio_path = None
+if input_method.startswith("Upload"):
+    uploaded = st.file_uploader("Ladda upp ljudfil (wav/mp3)", type=["wav","mp3"])
+    if uploaded is not None:
+        # Spara temporärt
+        temp_file = os.path.join("/tmp", uploaded.name)
+        with open(temp_file, "wb") as f:
+            f.write(uploaded.getbuffer())
+        audio_path = temp_file
+elif input_method.startswith("Local recording") and LOCAL_RECORDING:
+    duration = st.sidebar.slider("Spela in i sekunder", min_value=5, max_value=120, value=30)
+    if st.sidebar.button("Starta inspelning"):
+        st.sidebar.info("Inspelning pågår... vänta tills klar")
+        recorder = AudioRecorder()
+        thread = recorder.start_recording(filename="/tmp/recording.wav", duration=duration)
+        thread.join()
+        st.sidebar.success("Inspelning klar!")
+        audio_path = "/tmp/recording.wav"
+
+# När vi har en ljudfil: transkribera och analysera
+if audio_path:
+    st.subheader("Transkription")
+    transcriber = Transcriber()
+    with st.spinner("Transkriberar..."):
+        transcript = transcriber.transcribe(audio_path)
+    st.text_area("Transcript:", transcript, height=200)
+
+    st.subheader("Analys & Förslag")
+    analyzer = ConversationAnalyzer()
+    with st.spinner("Analyserar..."):
+        analysis = analyzer.analyze(transcript)
+    st.markdown(analysis["analysis"].replace("\n",  "  \n"))
+
+    # Erbjud tts-avspelning
+    if st.button("Spela upp analys med TTS"):
+        from tts import speak
+        speak(analysis["analysis"])
+
+else:
+    st.info("Välj en inmatningsmetod och ladda upp eller spela in ljud för analys.")
 
 # --- Färgtema (Lunds kommun-inspirerat) ---
 PRIMARY_COLOR = "#6A226A"
@@ -13,13 +72,6 @@ BG_COLOR = "#F9F6F7"
 BOX_COLOR = "#FFF7FB"
 TEXT_COLOR = "#222"
 ACCENT_COLOR = "#B57EB6"
-
-st.set_page_config(
-    page_title="SamtalsBot - Lunds kommun",
-    page_icon="🗣️",
-    layout="wide",
-    initial_sidebar_state="expanded"
-)
 
 # --- Custom CSS för Lunds kommun-stil ---
 st.markdown(f"""
