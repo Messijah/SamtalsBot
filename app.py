@@ -5,12 +5,11 @@ import os
 from transcription import Transcriber
 from analysis import ConversationAnalyzer
 
-# Tvinga kontrasterande färger i expander
+# Endast accentfärg på expanderHeader, ingen textfärg eller bakgrund
 st.markdown(
     """
     <style>
       .streamlit-expanderHeader { color: #E91E63 !important; }
-      .streamlit-expanderContent p { color: #333333 !important; }
     </style>
     """,
     unsafe_allow_html=True
