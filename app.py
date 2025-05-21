@@ -41,15 +41,10 @@ except ImportError:
         def __init__(self, *args, **kwargs):
             raise RuntimeError("Local recording inte tillgängligt i molnet. Välj \"Upload audio file\" istället.")
 
-st.title("🎤 SamtalsBot för skolledare")
-
-# Sidopanel: Input-metod
-input_method = st.sidebar.selectbox(
+# --- Ta bort sidomeny och flytta input till huvudflödet ---
+input_method = st.selectbox(
     "Välj inmatningsmetod:",
-    options=[
-        "Upload audio file",
-        "Local recording (endast lokalt)" if LOCAL_RECORDING else "Local recording (ej tillgängligt)"
-    ]
+    options=["Upload audio file"]
 )
 
 audio_path = None
@@ -159,28 +154,25 @@ st.markdown(f"""
     </style>
 """, unsafe_allow_html=True)
 
-# --- Header ---
+# --- Byt ut header-boxen mot enkel rubrik ---
 st.markdown(f"""
-<div class="main-header">
-    <span style='font-size:2.2rem;font-weight:bold;'>SamtalsBot</span>
-    <span style='font-size:1.2rem;margin-left:2rem;'>AI-driven samtalsassistent för Lunds kommun</span>
-    <span style='float:right;font-size:1.1rem;background:{ACCENT_COLOR};color:white;padding:0.5rem 1.2rem;border-radius:20px;'>JE</span>
+<div style='font-size:2.2rem;font-weight:bold;margin-bottom:2rem;'>
+AI-driven samtalsassistent för Lunds kommun
 </div>
 """, unsafe_allow_html=True)
 
-# --- GDPR Samtycke ---
+# --- Ta bort GDPR-knappen, visa bara info och gå vidare automatiskt ---
 gdpr_accepted = st.session_state.get("gdpr_accepted", False)
 if not gdpr_accepted:
     st.markdown(f"""
     <div class="gdpr-box">
         <b>GDPR & Dataskydd</b><br>
-        Denna app hanterar ljud och textdata för samtalsanalys. All data raderas automatiskt efter analys. Genom att gå vidare godkänner du att data kan skickas till OpenAI (USA) för språkmodellanalys. <br><br>
+        Denna app hanterar ljud och textdata för samtalsanalys. All data raderas automatiskt efter analys. Genom att fortsätta godkänner du att data kan skickas till OpenAI (USA) för språkmodellanalys. <br><br>
         <i>Ingen data sparas på servern. Allt sker temporärt och anonymiserat.</i>
     </div>
     """, unsafe_allow_html=True)
-    if st.button("Jag godkänner och vill fortsätta"):
-        st.session_state["gdpr_accepted"] = True
-    st.stop()
+    st.session_state["gdpr_accepted"] = True
+    st.experimental_rerun()
 
 # --- Steg 1: Ljudinspelning eller uppladdning ---
 st.markdown(f"<div class='step-box'><h3>1. Spela in eller ladda upp samtal</h3>", unsafe_allow_html=True)
