@@ -5,14 +5,12 @@ from openai import OpenAI
 client = OpenAI(api_key=os.getenv("OPENAI_API_KEY"))
 
 class Transcriber:
-    def __init__(self, model: str = "whisper-1"):
+    def __init__(self, model="whisper-1"):
         self.model = model
 
     def transcribe(self, audio_path: str) -> str:
-        with open(audio_path, "rb") as audio_file:
-            transcript = client.audio.transcriptions.create(
-                model=self.model,
-                file=audio_file,
-                response_format="text"
-            )
-        return transcript 
+        resp = client.audio.transcriptions.create(
+            file=open(audio_path, "rb"),
+            model=self.model,
+        )
+        return resp.text 
