@@ -52,17 +52,18 @@ if audio_path:
         transcript = transcriber.transcribe(audio_path)
     st.text_area("Transcript:", transcript, height=200)
 
-    st.subheader("Analys & Förslag")
+    st.subheader("Förslag enligt samtalsmodellen")
     analyzer = ConversationAnalyzer()
-    with st.spinner("Analyserar..."):
+    with st.spinner("Analyserar enligt samtalsmodellens fyra faser..."):
         analysis = analyzer.analyze(transcript)
-    st.markdown(analysis["analysis"].replace("\n",  "  \n"))
+    for phase, content in analysis.items():
+        with st.expander(phase, expanded=True):
+            st.markdown(content)
 
-    # Erbjud tts-avspelning
-    if st.button("Spela upp analys med TTS"):
+    # Erbjud tts-avspelning på hela analysen (alla faser)
+    if st.button("Spela upp hela analysen med TTS"):
         from tts import speak
-        speak(analysis["analysis"])
-
+        speak("\n\n".join(analysis.values()))
 else:
     st.info("Välj en inmatningsmetod och ladda upp eller spela in ljud för analys.")
 
