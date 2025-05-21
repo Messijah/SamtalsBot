@@ -1,3 +1,4 @@
+from datetime import datetime
 import streamlit as st
 st.set_page_config(page_title="SamtalsBot", layout="wide")
 
@@ -178,15 +179,18 @@ if not gdpr_accepted:
 st.markdown(f"<div class='step-box'><h3>1. Spela in eller ladda upp samtal</h3>", unsafe_allow_html=True)
 col1, col2 = st.columns(2)
 with col1:
-    if st.button("🎤 Starta inspelning", key="start_rec"):
-        st.session_state["recording"] = True
-        st.session_state["recorder"] = AudioRecorder()
-        st.session_state["thread"] = st.session_state["recorder"].start_recording(filename="temp_recording.wav")
-        st.success("Inspelning pågår... Klicka 'Stoppa inspelning' när du är klar.")
-    if st.button("⏹️ Stoppa inspelning", key="stop_rec") and st.session_state.get("recording", False):
-        st.session_state["recording"] = False
-        st.session_state["recorder"].stop_recording()
-        st.success("Inspelning klar!")
+    if LOCAL_RECORDING:
+        if st.button("🎤 Starta inspelning", key="start_rec"):
+            st.session_state["recording"] = True
+            st.session_state["recorder"] = AudioRecorder()
+            st.session_state["thread"] = st.session_state["recorder"].start_recording(filename="temp_recording.wav")
+            st.success("Inspelning pågår... Klicka 'Stoppa inspelning' när du är klar.")
+        if st.button("⏹️ Stoppa inspelning", key="stop_rec") and st.session_state.get("recording", False):
+            st.session_state["recording"] = False
+            st.session_state["recorder"].stop_recording()
+            st.success("Inspelning klar!")
+    else:
+        st.info("Ljudinspelning är inte tillgänglig i denna miljö. Ladda upp en WAV-fil istället.")
 
 with col2:
     uploaded_file = st.file_uploader("Eller ladda upp en WAV-fil", type=["wav"])
