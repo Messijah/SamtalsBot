@@ -1,10 +1,11 @@
-from openai import OpenAI
-import os
+import openai
 import re
+import os
+
+openai.api_key = os.getenv("OPENAI_API_KEY")
 
 class ConversationAnalyzer:
     def __init__(self, model="gpt-4"):
-        self.client = OpenAI()
         self.model = model
 
     def analyze(self, transcript: str) -> dict:
@@ -16,7 +17,7 @@ class ConversationAnalyzer:
             "4) Avsluta med konkreta åtgärder – specificera nästa steg.\n\n"
             "Gör en kort punktlista för varje steg baserat på transkriptionen."
         )
-        response = self.client.chat.completions.create(
+        resp = openai.ChatCompletion.create(
             model=self.model,
             messages=[
                 {"role": "system",  "content": system_prompt},
@@ -24,9 +25,8 @@ class ConversationAnalyzer:
             ],
             temperature=0.2,
         )
-        chunks = response.choices[0].message.content
-        # Dela upp på steg, t.ex. med split("1)") eller regex, och returnera en dict
+        text = resp.choices[0].message.content
         phases = {}
-        for header, body in re.findall(r"(\d\) [^\n]+)\n([\s\S]+?)(?=\n\d\)|\Z)", chunks):
+        for header, body in re.findall(r"(\d\) [^\n]+)\n([\s\S]+?)(?=\n\d\)|\Z)", text):
             phases[header] = body.strip()
         return phases 
