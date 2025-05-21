@@ -13,10 +13,6 @@ class Transcriber:
             result = openai.Audio.transcribe(
                 model=self.model,
                 file=f,
-                response_format="text"
+                response_format="verbose_json"
             )
-        # Whisper API ger tillbaka en sträng i response_format="text"
-        if isinstance(result, str):
-            return result
-        # fallback om du mot förmodan byter format till JSON
-        return result.get("text", "") 
+        return result["text"] 
