@@ -3,6 +3,16 @@ import os
 from transcription import Transcriber
 from analysis import ConversationAnalyzer
 
+# Tvinga fram synlig text i expander med CSS
+st.markdown(
+    """
+    <style>
+      .streamlit-expanderHeader { color: var(--primary-color); }
+      .streamlit-expanderContent { color: var(--text-color); }
+    </style>
+    """, unsafe_allow_html=True
+)
+
 # Försök importera AudioRecorder, annars mock
 try:
     from audio_capture import AudioRecorder
