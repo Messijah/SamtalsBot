@@ -172,7 +172,7 @@ if not gdpr_accepted:
     </div>
     """, unsafe_allow_html=True)
     st.session_state["gdpr_accepted"] = True
-    st.experimental_rerun()
+    st.rerun()
 
 # --- Steg 1: Ljudinspelning eller uppladdning ---
 st.markdown(f"<div class='step-box'><h3>1. Spela in eller ladda upp samtal</h3>", unsafe_allow_html=True)
