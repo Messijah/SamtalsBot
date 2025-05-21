@@ -1,4 +1,7 @@
-from openai import OpenAI
+import openai
+import os
+
+openai.api_key = os.getenv("OPENAI_API_KEY")
 
 class ConversationAnalyzer:
     def __init__(self, model="gpt-4"):
@@ -23,8 +26,7 @@ Här är transkriptionen av samtalet:
 Analysera enligt system-prompten:
 '''
 
-        client = OpenAI()
-        resp = client.chat.completions.create(
+        response = openai.ChatCompletion.create(
             model=self.model,
             messages=[
                 {"role": "system", "content": system_prompt},
@@ -32,5 +34,5 @@ Analysera enligt system-prompten:
             ],
             temperature=0.2,
         )
-        text = resp.choices[0].message.content
+        text = response.choices[0].message.content
         return {"analysis": text} 
