@@ -3,6 +3,8 @@ import os
 from transcription import Transcriber
 from analysis import ConversationAnalyzer
 
+st.set_page_config(page_title="SamtalsBot", layout="wide")
+
 # Tvinga fram synlig text i expander med CSS
 st.markdown(
     """
@@ -23,7 +25,6 @@ except ImportError:
         def __init__(self, *args, **kwargs):
             raise RuntimeError("Local recording inte tillgängligt i molnet. Välj \"Upload audio file\" istället.")
 
-st.set_page_config(page_title="SamtalsBot", layout="wide")
 st.title("🎤 SamtalsBot för skolledare")
 
 # Sidopanel: Input-metod
