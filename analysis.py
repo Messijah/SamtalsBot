@@ -1,12 +1,11 @@
-from openai import OpenAI
+import openai
 import os
 import re
 
-client = OpenAI(api_key=os.getenv("OPENAI_API_KEY"))
+openai.api_key = os.getenv("OPENAI_API_KEY")
 
 class ConversationAnalyzer:
     def __init__(self, model="gpt-4o-mini"):
-        self.client = client
         self.model = model
 
     def analyze(self, transcript: str) -> dict:
@@ -18,7 +17,7 @@ class ConversationAnalyzer:
             "4) Avsluta med konkreta åtgärder – specificera nästa steg.\n\n"
             "Gör en kort punktlista för varje steg baserat på transkriptionen."
         )
-        response = self.client.chat.completions.create(
+        response = openai.ChatCompletion.create(
             model=self.model,
             messages=[
                 {"role": "system", "content": system_prompt},

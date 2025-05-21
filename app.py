@@ -3,17 +3,25 @@ import os
 from transcription import Transcriber
 from analysis import ConversationAnalyzer
 
-st.set_page_config(page_title="SamtalsBot", layout="wide")
-
-# Tvinga fram synlig text i expander med CSS
-st.markdown(
-    """
-    <style>
-      .streamlit-expanderHeader { color: var(--primary-color); }
-      .streamlit-expanderContent { color: var(--text-color); }
-    </style>
-    """, unsafe_allow_html=True
+st.set_page_config(
+    page_title="SamtalsBot",
+    layout="wide",
+    theme={
+        "base": "light",
+        "textColor": "#222222",
+        "backgroundColor": "#F0F2F6",
+        "secondaryBackgroundColor": "#FFFFFF"
+    }
 )
+
+# Tvinga svart text i expander med CSS
+st.markdown("""
+  <style>
+    .streamlit-expanderHeader { color: #222 !important; }
+    .streamlit-expanderContent p, 
+    .streamlit-expanderContent li { color: #222 !important; }
+  </style>
+""", unsafe_allow_html=True)
 
 # Försök importera AudioRecorder, annars mock
 try:
