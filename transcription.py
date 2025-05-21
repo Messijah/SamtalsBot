@@ -5,14 +5,14 @@ import os
 openai.api_key = os.getenv("OPENAI_API_KEY")
 
 class Transcriber:
-    def __init__(self, model="whisper-1"):
-        self.model = model
+    def __init__(self):
+        openai.api_key = os.getenv("OPENAI_API_KEY")
 
     def transcribe(self, audio_path: str) -> str:
         with open(audio_path, "rb") as f:
-            result = openai.Audio.transcribe(
-                model=self.model,
+            transcript = openai.Audio.transcribe(
+                model="whisper-1",
                 file=f,
-                response_format="verbose_json"
+                response_format="text",
             )
-        return result["text"] 
+        return transcript 

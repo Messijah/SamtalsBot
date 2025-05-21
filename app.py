@@ -62,7 +62,7 @@ if audio_path:
     # Visa varje fas i en egen expander
     for phase, content in analysis.items():
         with st.expander(phase, expanded=False):
-            st.markdown(content)
+            st.write(content)
 
     # TTS-knappen kommenteras ut tills implementation finns
     # if st.button("Spela upp hela analysen med TTS"):
