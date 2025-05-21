@@ -46,24 +46,28 @@ elif input_method.startswith("Local recording") and LOCAL_RECORDING:
 
 # När vi har en ljudfil: transkribera och analysera
 if audio_path:
-    st.subheader("Transkription")
+    st.subheader("Förslag enligt samtalsmodellen")
     transcriber = Transcriber()
     with st.spinner("Transkriberar..."):
         transcript = transcriber.transcribe(audio_path)
-    st.text_area("Transcript:", transcript, height=200)
 
-    st.subheader("Förslag enligt samtalsmodellen")
+    # Dölj transkriptet i en expander
+    with st.expander("Visa transkription", expanded=False):
+        st.text_area("Transcript:", transcript, height=200)
+
     analyzer = ConversationAnalyzer()
     with st.spinner("Analyserar enligt samtalsmodellens fyra faser..."):
         analysis = analyzer.analyze(transcript)
+
+    # Visa varje fas i en egen expander
     for phase, content in analysis.items():
-        with st.expander(phase, expanded=True):
+        with st.expander(phase, expanded=False):
             st.markdown(content)
 
-    # Erbjud tts-avspelning på hela analysen (alla faser)
-    if st.button("Spela upp hela analysen med TTS"):
-        from tts import speak
-        speak("\n\n".join(analysis.values()))
+    # TTS-knappen kommenteras ut tills implementation finns
+    # if st.button("Spela upp hela analysen med TTS"):
+    #     from tts import speak
+    #     speak("\n\n".join(analysis.values()))
 else:
     st.info("Välj en inmatningsmetod och ladda upp eller spela in ljud för analys.")
 
