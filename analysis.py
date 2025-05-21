@@ -1,8 +1,9 @@
-import openai
+from openai import OpenAI
+
+client = OpenAI(api_key=os.getenv("OPENAI_API_KEY"))
 import os
 import re
 
-openai.api_key = os.getenv("OPENAI_API_KEY")
 
 class ConversationAnalyzer:
     def __init__(self, model="gpt-4o-mini"):
@@ -17,14 +18,12 @@ class ConversationAnalyzer:
             "4) Avsluta med konkreta åtgärder – specificera nästa steg.\n\n"
             "Gör en kort punktlista för varje steg baserat på transkriptionen."
         )
-        response = openai.ChatCompletion.create(
-            model=self.model,
-            messages=[
-                {"role": "system", "content": system_prompt},
-                {"role": "user", "content": transcript},
-            ],
-            temperature=0.2,
-        )
+        response = client.chat.completions.create(model=self.model,
+        messages=[
+            {"role": "system", "content": system_prompt},
+            {"role": "user", "content": transcript},
+        ],
+        temperature=0.2)
         text = response.choices[0].message.content
         phases = {}
         for header, body in re.findall(r"(\d\) [^\n]+)\n([\s\S]+?)(?=\n\d\)|\Z)", text):
