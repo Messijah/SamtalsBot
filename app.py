@@ -100,17 +100,11 @@ else:
 
 # --- Färgtema (Lunds kommun-inspirerat) ---
 PRIMARY_COLOR = "#6A226A"
-BG_COLOR = "#F9F6F7"
-BOX_COLOR = "#FFF7FB"
-TEXT_COLOR = "#222"
 ACCENT_COLOR = "#B57EB6"
 
-# --- Custom CSS för Lunds kommun-stil ---
+# --- Custom CSS för mörkt tema och accentfärger ---
 st.markdown(f"""
     <style>
-    .stApp {{
-        background-color: {BG_COLOR};
-    }}
     .main-header {{
         background: {PRIMARY_COLOR};
         color: white;
@@ -119,25 +113,27 @@ st.markdown(f"""
         margin-bottom: 2rem;
     }}
     .gdpr-box {{
-        background: {BOX_COLOR};
+        background: #222;
         border-left: 6px solid {PRIMARY_COLOR};
+        color: #FAFAFA;
         padding: 1rem 1.5rem;
         margin-bottom: 1.5rem;
         border-radius: 8px;
     }}
     .step-box {{
-        background: white;
-        border: 1px solid #eee;
+        background: #18191A;
+        border: 1px solid #333;
         border-radius: 10px;
+        color: #FAFAFA;
         padding: 2rem 2rem 1.5rem 2rem;
         margin-bottom: 2rem;
-        box-shadow: 0 2px 8px #0001;
+        box-shadow: 0 2px 8px #0003;
     }}
     .footer-gdpr {{
-        color: #666;
+        color: #AAA;
         font-size: 0.9rem;
         margin-top: 2rem;
-        border-top: 1px solid #eee;
+        border-top: 1px solid #333;
         padding-top: 1rem;
     }}
     .stButton>button {{
@@ -150,8 +146,15 @@ st.markdown(f"""
         margin: 0.2rem 0.5rem 0.2rem 0;
     }}
     .stButton>button:disabled {{
-        background: #ccc;
-        color: #fff;
+        background: #444;
+        color: #888;
+    }}
+    .streamlit-expanderContent {{
+        color: #FAFAFA !important;
+        background-color: #18191A !important;
+    }}
+    .streamlit-expanderHeader {{
+        color: {ACCENT_COLOR} !important;
     }}
     </style>
 """, unsafe_allow_html=True)
