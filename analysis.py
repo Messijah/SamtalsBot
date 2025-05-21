@@ -4,28 +4,36 @@ from typing import Dict
 
 client = OpenAI(api_key=os.getenv("OPENAI_API_KEY"))
 
-SYSTEM_PROMPT = """
-Du är en samtalscoach för skolledare. Analysera transkriptionen enligt samtalsmodell:
-1) Sätt scenen – Hur definierades syfte och ram?
-2) Perspektiv – Vilka röster och argument kom fram?
-3) Fördjupning – Vilka mönster eller insikter identifierades?
-4) Avslut – Vilka konkreta åtgärder och nästa steg beslutades?
-Svara strukturerat under varje rubrik.
-"""
+PHASES = [
+    ("Sätt scenen", "Sammanfatta syfte, mål och trygghetsramar för samtalet."),
+    ("Perspektiv & argument", "Lista vilka olika röster och argument som kom fram."),
+    ("Fördjupa & strukturera", "Peka på mönster, orsaker och möjliga lösningar."),
+    ("Åtgärdsplan", "Specificera konkreta nästa steg med ansvar och tidsram.")
+]
 
 class ConversationAnalyzer:
     def __init__(self, model: str = "gpt-4"):
         self.model = model
 
     def analyze(self, transcript: str) -> Dict[str, str]:
-        response = client.chat.completions.create(
-            model=self.model,
-            messages=[
-                {"role": "system",  "content": SYSTEM_PROMPT},
-                {"role": "user",    "content": transcript}
-            ],
-            temperature=0.3,
-            max_tokens=800
-        )
-        content = response.choices[0].message.content
-        return {"analysis": content} 
+        results = {}
+        for phase, instruction in PHASES:
+            system_prompt = f"""
+Du är en samtalscoach som analyserar ett transkriberat möte mellan skolledare och lärare.
+Fokusera endast på denna fas:
+{phase}: {instruction}
+Svara kortfattat och tydligt.
+"""
+            user_prompt = f"Här är transkriptionen av samtalet:\n\n'''{transcript}'''
+Analysera enligt ovan."
+            response = client.chat.completions.create(
+                model=self.model,
+                messages=[
+                    {"role": "system", "content": system_prompt},
+                    {"role": "user",   "content": user_prompt}
+                ],
+                temperature=0.2,
+                max_tokens=400
+            )
+            results[phase] = response.choices[0].message.content.strip()
+        return results 
