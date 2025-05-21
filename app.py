@@ -3,25 +3,23 @@ import os
 from transcription import Transcriber
 from analysis import ConversationAnalyzer
 
+# MÅSTE vara första Streamlit-anropet!
 st.set_page_config(
     page_title="SamtalsBot",
-    layout="wide",
-    theme={
-        "base": "light",
-        "textColor": "#222222",
-        "backgroundColor": "#F0F2F6",
-        "secondaryBackgroundColor": "#FFFFFF"
-    }
+    layout="wide"
 )
 
-# Tvinga svart text i expander med CSS
-st.markdown("""
+# Tvinga mörk text i expander
+st.markdown(
+  """
   <style>
-    .streamlit-expanderHeader { color: #222 !important; }
-    .streamlit-expanderContent p, 
-    .streamlit-expanderContent li { color: #222 !important; }
+    .streamlit-expanderHeader {color: #222222 !important;}
+    .streamlit-expanderContent p,
+    .streamlit-expanderContent li {color: #222222 !important;}
   </style>
-""", unsafe_allow_html=True)
+  """,
+  unsafe_allow_html=True,
+)
 
 # Försök importera AudioRecorder, annars mock
 try:
