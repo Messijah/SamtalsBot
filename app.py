@@ -1,6 +1,22 @@
 import streamlit as st
 st.set_page_config(page_title="SamtalsBot", layout="wide")
 
+# Tvinga rätt färger i expanders och body med theme-variabler
+st.markdown(
+    """
+    <style>
+      .stExpander, .stExpander > .css-1d391kg {
+        color: var(--primaryTextColor);
+        background-color: var(--secondaryBackgroundColor);
+      }
+      .block-container {
+        background-color: var(--backgroundColor);
+      }
+    </style>
+    """,
+    unsafe_allow_html=True,
+)
+
 import os
 from transcription import Transcriber
 from analysis import ConversationAnalyzer
