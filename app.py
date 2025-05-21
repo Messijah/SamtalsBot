@@ -5,16 +5,16 @@ st.set_page_config(page_title="SamtalsBot", layout="wide")
 st.markdown(
     """
     <style>
-      .stExpander, .stExpander > .css-1d391kg {
-        color: var(--primaryTextColor);
-        background-color: var(--secondaryBackgroundColor);
+      .streamlit-expanderContent {
+        color: #FAFAFA !important;
+        background-color: var(--secondaryBackgroundColor) !important;
       }
       .block-container {
         background-color: var(--backgroundColor);
       }
     </style>
     """,
-    unsafe_allow_html=True,
+    unsafe_allow_html=True
 )
 
 import os
